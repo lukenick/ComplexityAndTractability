@@ -129,20 +129,40 @@ def find_max(the_list):
         i += 1
     return best_i
 
+def generate_knapsack_instance(items, min_weight, max_weight, min_bfb, max_bfb):
+    weights = []
+    values = []
+    for _ in range(items):
+        this_weight = random.randint(min_weight, max_weight)
+        weights.append(this_weight)
+        this_value = ((int) (this_weight * random.randrange(min_bfb, max_bfb)))
+        this_value = (int) (this_value / 25) * 25 # Round to nearest 25
+        values.append(this_value) 
+    return [weights, values]
+
 if __name__ == "__main__":
     weights = [10, 5, 7, 12, 14, 6, 9, 11, 13]
     values = [500, 450, 400, 600, 700, 300, 500, 350, 800]
 
+    new_instance = generate_knapsack_instance(10, 2, 20, 10, 60)
+    print(new_instance)
+
+    weights = new_instance[0]
+    values = new_instance[1]
+
+    print("Expensive First")
     t1 = time.time()
     print(expensive_first(weights, values, 30))
     t2 = time.time()
     print(t2 - t1)
 
+    print("Bang for Buck")
     t1 = time.time()
     print(bang_for_buck(weights, values, 30))
     t2 = time.time()
     print(t2 - t1)
 
+    print("Brute Force")
     t1 = time.time()
     print(brute_force(weights, values, 30))
     t2 = time.time()
