@@ -22,15 +22,25 @@ def expensive_first(in_weights, in_values, constraint):
     total_weight = 0
     total_value = 0
 
-    while len(my_weights) > 0:
-        i = find_max(my_weights)
-        if (my_weights[i] + total_weight < constraint):
-            total_weight += my_weights[i]
-            total_value += my_values[i]
-            chosen_items.append(i)
-        my_weights.pop(i)
-        my_values.pop(i)
+    i = 0
+    while i <= len(my_weights):
+        index = find_max(my_values)
+        if (my_weights[index] + total_weight < constraint and my_weights[index] > 0):
+            total_weight += my_weights[index]
+            total_value += my_values[index]
+            chosen_items.append(index)
+        my_weights[index] = 0
+        my_values[index] = 0
+        i += 1
     return [total_weight, total_value, chosen_items]
+
+def test_expensive_first():
+    weights1 = [  20,   4,   7,   7,   2,   7,  11,  18,  15,   5]
+    values1  = [1125,  75, 300, 400,  10, 325, 350, 925, 425, 200]
+    expected = [29, 1535, [0, 3, 4]]
+    actual = expensive_first(weights1, values1, 30)
+    assert(expected==actual)
+    print("test_expensive_first(): All tests passed.")
 
 """
 A heuristic method to find a solution to the knapsack problem using a "Bang for Buck" greedy approach.
@@ -55,15 +65,17 @@ def bang_for_buck(in_weights, in_values, constraint):
     total_weight = 0
     total_value = 0
 
-    while len(my_weights) > 0:
-        i = find_max(bang_for_buck)
-        if (my_weights[i] + total_weight < constraint):
-            total_weight += my_weights[i]
-            total_value += my_values[i]
-            chosen_items.append(i)
-        my_weights.pop(i)
-        my_values.pop(i)
-        bang_for_buck.pop(i)
+    i = 0
+    while i <= len(my_weights):
+        index = find_max(bang_for_buck)
+        if (my_weights[index] + total_weight < constraint and my_weights[index] > 0):
+            total_weight += my_weights[index]
+            total_value += my_values[index]
+            chosen_items.append(index)
+        my_weights[index] = 0
+        my_values[index] = 0
+        bang_for_buck[index] = 0
+        i += 1
     return [total_weight, total_value, chosen_items]
 
 """
@@ -122,7 +134,7 @@ def find_max(the_list):
     i = 0
     best = the_list[i]
     best_i = 0
-    while i < len(the_list) - 1:
+    while i < len(the_list):
         if (the_list[i] > best):
             best = the_list[i]
             best_i = i
@@ -141,7 +153,7 @@ def generate_knapsack_instance(items, min_weight, max_weight, min_bfb, max_bfb):
     return [weights, values]
 
 if __name__ == "__main__":
-    weights = [10, 5, 7, 12, 14, 6, 9, 11, 13]
+    weights= [ 10,   5,   7,  12,  14,   6,   9,  11,  13]
     values = [500, 450, 400, 600, 700, 300, 500, 350, 800]
 
     new_instance = generate_knapsack_instance(10, 2, 20, 10, 60)
@@ -156,14 +168,16 @@ if __name__ == "__main__":
     t2 = time.time()
     print(t2 - t1)
 
-    print("Bang for Buck")
-    t1 = time.time()
-    print(bang_for_buck(weights, values, 30))
-    t2 = time.time()
-    print(t2 - t1)
+    test_expensive_first()
 
-    print("Brute Force")
-    t1 = time.time()
-    print(brute_force(weights, values, 30))
-    t2 = time.time()
-    print(t2 - t1)
+    # print("Bang for Buck")
+    # t1 = time.time()
+    # print(bang_for_buck(weights, values, 30))
+    # t2 = time.time()
+    # print(t2 - t1)
+    #
+    # print("Brute Force")
+    # t1 = time.time()
+    # print(brute_force(weights, values, 30))
+    # t2 = time.time()
+    # print(t2 - t1)
